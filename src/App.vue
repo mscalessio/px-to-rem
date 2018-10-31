@@ -45,7 +45,7 @@
             <md-table-row v-for="n in 30" :key="n">
               <md-table-cell class="table-fixed">x{{n}}</md-table-cell>
               <md-table-cell class="table-fixed">{{ n * 4 }}</md-table-cell>
-              <md-table-cell class="table-fixed">{{ (n * 4) / defaultSize }}</md-table-cell>
+              <md-table-cell class="table-fixed">{{ round((n * 4) / defaultSize) }}</md-table-cell>
             </md-table-row>
           </md-table>
         </div>
@@ -55,6 +55,11 @@
 </template>
 
 <script>
+
+const DECIMAL_PRECISION = 2
+function round (n, precision = DECIMAL_PRECISION) {
+  return Math.round(n * Math.pow(10, precision)) / Math.pow(10, precision)
+}
 
 export default {
   name: 'App',
@@ -66,15 +71,18 @@ export default {
       unitRem: 1
     }
   },
+  methods: {
+    round
+  },
   watch: {
     defaultSize: function (val) {
-      this.unitRem = this.unitPx / val
+      this.unitRem = round(this.unitPx / val)
     },
     unitPx: function (val) {
-      this.unitRem = val / this.defaultSize
+      this.unitRem = round(val / this.defaultSize)
     },
     unitRem: function (val) {
-      this.unitPx = val * this.defaultSize
+      this.unitPx = round(val * this.defaultSize)
     }
   }
 }
